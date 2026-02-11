@@ -7,10 +7,16 @@ options:
   xcodeVersion: "16.0"
 
 settings:
-  SWIFT_VERSION: "6.0"
-  SWIFT_STRICT_CONCURRENCY: complete
-  MARKETING_VERSION: "1.0.0"
-  CURRENT_PROJECT_VERSION: 1
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: 1
+  configs:
+    Debug:
+      PRODUCT_BUNDLE_IDENTIFIER: com.example.UIElementInspector.dev
+    Release:
+      PRODUCT_BUNDLE_IDENTIFIER: com.example.UIElementInspector
 
 targets:
   UIElementInspector:
@@ -23,13 +29,18 @@ targets:
     resources:
       - path: UIElementInspector/Resources
     settings:
-      PRODUCT_BUNDLE_IDENTIFIER: com.example.UIElementInspector
-      INFOPLIST_FILE: UIElementInspector/Resources/Info.plist
-      CODE_SIGN_ENTITLEMENTS: UIElementInspector/Resources/UIElementInspector.entitlements
-      ENABLE_HARDENED_RUNTIME: YES
-      ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-      ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
-      COMBINE_HIDPI_IMAGES: YES
+      base:
+        INFOPLIST_FILE: UIElementInspector/Resources/Info.plist
+        CODE_SIGN_ENTITLEMENTS: UIElementInspector/Resources/UIElementInspector.entitlements
+        ENABLE_HARDENED_RUNTIME: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        COMBINE_HIDPI_IMAGES: YES
+      configs:
+        Debug:
+          PRODUCT_BUNDLE_IDENTIFIER: com.example.UIElementInspector.dev
+        Release:
+          PRODUCT_BUNDLE_IDENTIFIER: com.example.UIElementInspector
     info:
       path: UIElementInspector/Resources/Info.plist
       properties:

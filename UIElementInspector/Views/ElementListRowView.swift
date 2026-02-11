@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ElementListRowView: View {
   let element: AccessibilityElement;
+  @State private var isHovering = false;
 
   var body: some View {
     HStack {
@@ -16,6 +17,10 @@ struct ElementListRowView: View {
           .foregroundStyle(.secondary);
       }
     }
-    .padding(.leading, CGFloat(element.depth) * 8);
+    .padding(.leading, CGFloat(element.depth) * 8)
+    .background(isHovering ? Color.blue.opacity(0.1) : Color.clear)
+    .onHover { hovering in
+      isHovering = hovering;
+    };
   }
 }
