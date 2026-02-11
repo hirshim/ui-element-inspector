@@ -3,38 +3,31 @@ import SwiftUI
 struct AppSelectorView: View {
   let apps: [AppInfo];
   @Binding var selectedApp: AppInfo?;
-  let onSelect: (AppInfo) -> Void;
-  let onRefreshApps: () -> Void;
+  let onOpen: () -> Void;
 
   var body: some View {
-    HStack {
-      Picker("アプリケーション", selection: Binding(
-        get: { selectedApp?.id },
-        set: { id in
-          if let app = apps.first(where: { $0.id == id }) {
-            onSelect(app);
-          }
+    Picker("アプリ", selection: $selectedApp) {
+      Text("選択してください").tag(AppInfo?.none);
+      ForEach(apps) { app in
+        Label {
+          Text(app.name);
+        } icon: {
+          Image(nsImage: sizedIcon(app.icon));
         }
-      )) {
-        Text("選択してください").tag(nil as pid_t?);
-        ForEach(apps) { app in
-          HStack {
-            if let icon = app.icon {
-              Image(nsImage: icon)
-                .resizable()
-                .frame(width: 16, height: 16);
-            }
-            Text(app.name);
-          }
-          .tag(app.id as pid_t?);
-        }
+        .tag(Optional(app));
       }
-      .labelsHidden();
-
-      Button(action: onRefreshApps) {
-        Image(systemName: "arrow.clockwise");
-      }
-      .buttonStyle(.borderless);
     }
+    .pickerStyle(.menu)
+    .labelsHidden()
+    .onAppear {
+      onOpen();
+    };
+  }
+
+  private func sizedIcon(_ image: NSImage?) -> NSImage {
+    guard let original = image else { return NSImage(); }
+    let icon = original.copy() as! NSImage;
+    icon.size = NSSize(width: 24, height: 24);
+    return icon;
   }
 }

@@ -65,9 +65,15 @@ final class AccessibilityService {
   // MARK: - Attributes
 
   struct AttributeItem: Identifiable {
-    let id = UUID();
+    let id: String;
     let key: String;
     let value: String;
+
+    init(key: String, value: String) {
+      self.id = key;
+      self.key = key;
+      self.value = value;
+    }
   }
 
   func allAttributes(of element: AXUIElement) -> [AttributeItem] {

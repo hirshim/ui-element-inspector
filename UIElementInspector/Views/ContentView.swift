@@ -17,9 +17,6 @@ struct ContentView: View {
     }
     .onAppear {
       checkPermission();
-      if isAccessibilityGranted {
-        viewModel.loadRunningApps();
-      }
     };
   }
 
@@ -49,58 +46,72 @@ struct ContentView: View {
   @ViewBuilder
   private var sidebarContent: some View {
     VStack(spacing: 0) {
-      AppSelectorView(
-        apps: viewModel.runningApps,
-        selectedApp: $viewModel.selectedApp,
-        onSelect: { viewModel.selectApp($0); },
-        onRefreshApps: { viewModel.loadRunningApps(); }
-      )
+      HStack {
+        Text("App:");
+
+        AppSelectorView(
+          apps: viewModel.runningApps,
+          selectedApp: $viewModel.selectedApp,
+          onOpen: { viewModel.loadRunningApps(); }
+        )
+        .onChange(of: viewModel.selectedApp) { oldValue, newValue in
+          if newValue?.id != oldValue?.id, newValue != nil {
+            viewModel.selectedElement = nil;
+            viewModel.errorMessage = nil;
+            viewModel.refreshElementTree();
+          }
+        };
+
+        Picker("表示", selection: $viewModel.viewMode) {
+          ForEach(InspectorViewModel.ViewMode.allCases, id: \.self) { mode in
+            Text(mode.rawValue).tag(mode);
+          }
+        }
+        .pickerStyle(.segmented)
+        .labelsHidden()
+        .fixedSize();
+      }
       .padding();
 
       Divider();
 
-      ElementFilterView(filter: $viewModel.filter)
-        .padding(.horizontal)
-        .padding(.vertical, 8);
+      if viewModel.viewMode == .list {
+        ElementFilterView(filter: $viewModel.filter)
+          .padding(.horizontal)
+          .padding(.vertical, 8);
 
-      Divider();
+        Divider();
+      }
 
-      Picker("表示", selection: $viewModel.viewMode) {
-        ForEach(InspectorViewModel.ViewMode.allCases, id: \.self) { mode in
-          Text(mode.rawValue).tag(mode);
+      Group {
+        if viewModel.isLoading {
+          ProgressView("読み込み中...");
+        } else if let error = viewModel.errorMessage {
+          ContentUnavailableView(
+            "エラー",
+            systemImage: "exclamationmark.triangle",
+            description: Text(error)
+          );
+        } else {
+          switch viewModel.viewMode {
+          case .list:
+            ElementListView(
+              elements: viewModel.filteredElements,
+              selectedElement: viewModel.selectedElement,
+              onSelect: { viewModel.selectElement($0); },
+              onHover: { viewModel.highlightElement($0); }
+            );
+          case .tree:
+            ElementTreeView(
+              rootElement: viewModel.rootElement,
+              selectedElement: viewModel.selectedElement,
+              onSelect: { viewModel.selectElement($0); },
+              onHover: { viewModel.highlightElement($0); }
+            );
+          }
         }
       }
-      .pickerStyle(.segmented)
-      .padding(.horizontal)
-      .padding(.vertical, 4);
-
-      if viewModel.isLoading {
-        ProgressView("読み込み中...")
-          .frame(maxWidth: .infinity, maxHeight: .infinity);
-      } else if let error = viewModel.errorMessage {
-        ContentUnavailableView(
-          "エラー",
-          systemImage: "exclamationmark.triangle",
-          description: Text(error)
-        );
-      } else {
-        switch viewModel.viewMode {
-        case .list:
-          ElementListView(
-            elements: viewModel.filteredElements,
-            selectedElement: viewModel.selectedElement,
-            onSelect: { viewModel.selectElement($0); },
-            onHover: { viewModel.highlightElement($0); }
-          );
-        case .tree:
-          ElementTreeView(
-            rootElement: viewModel.rootElement,
-            selectedElement: viewModel.selectedElement,
-            onSelect: { viewModel.selectElement($0); },
-            onHover: { viewModel.highlightElement($0); }
-          );
-        }
-      }
+      .frame(maxWidth: .infinity, maxHeight: .infinity);
     }
   }
 
