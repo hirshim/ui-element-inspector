@@ -1,7 +1,7 @@
 @preconcurrency import ApplicationServices
 import Foundation
 
-final class AccessibilityService {
+final class AccessibilityService: Sendable {
 
   // MARK: - Permission
 
@@ -18,7 +18,7 @@ final class AccessibilityService {
 
   // MARK: - Element Tree
 
-  func fetchElementTree(for pid: pid_t, maxDepth: Int = 20) -> AccessibilityElement? {
+  func fetchElementTree(for pid: pid_t, maxDepth: Int = 50) -> AccessibilityElement? {
     let appElement = AXUIElementCreateApplication(pid);
     return buildElement(from: appElement, depth: 0, indexPath: [], maxDepth: maxDepth);
   }
@@ -31,15 +31,30 @@ final class AccessibilityService {
   ) -> AccessibilityElement? {
     guard depth <= maxDepth else { return nil; }
 
+    // Informational
     let role = axElement.role ?? "Unknown";
+    let subrole = axElement.subrole;
+    let roleDescription: String? = axElement.typedValue(kAXRoleDescriptionAttribute);
     let title = axElement.title;
+    let axDescription = axElement.axDescription;
+    let help = axElement.help;
+    let identifier = axElement.identifier;
+    // Visual State
+    let isEnabled = axElement.isEnabled;
+    let isFocused = axElement.isFocused;
+    let position = axElement.axPosition;
+    let size = axElement.axSize;
+    let isSelected = axElement.isSelected;
+    let isExpanded = axElement.isExpanded;
+    // Value
     let value: String? = {
       guard let v = axElement.getValue(kAXValueAttribute) else { return nil; }
       return String(describing: v);
     }();
-    let roleDescription: String? = axElement.typedValue(kAXRoleDescriptionAttribute);
-    let position = axElement.axPosition;
-    let size = axElement.axSize;
+    let valueDescription = axElement.valueDescription;
+    let minValue = axElement.minValue;
+    let maxValue = axElement.maxValue;
+    let placeholderValue = axElement.placeholderValue;
 
     var childElements: [AccessibilityElement] = [];
     if let axChildren = axElement.children {
@@ -51,11 +66,23 @@ final class AccessibilityService {
     return AccessibilityElement(
       axElement: axElement,
       role: role,
-      title: title,
-      value: value,
+      subrole: subrole,
       roleDescription: roleDescription,
+      title: title,
+      axDescription: axDescription,
+      help: help,
+      identifier: identifier,
+      isEnabled: isEnabled,
+      isFocused: isFocused,
       position: position,
       size: size,
+      isSelected: isSelected,
+      isExpanded: isExpanded,
+      value: value,
+      valueDescription: valueDescription,
+      minValue: minValue,
+      maxValue: maxValue,
+      placeholderValue: placeholderValue,
       depth: depth,
       indexPath: indexPath,
       children: childElements

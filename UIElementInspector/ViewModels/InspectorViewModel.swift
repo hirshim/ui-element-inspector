@@ -12,10 +12,12 @@ final class InspectorViewModel {
   var filter: ElementFilter = ElementFilter();
   var isLoading: Bool = false;
   var errorMessage: String?;
-  var viewMode: ViewMode = .list;
+  var viewMode: ViewMode = .table;
+  var attributeNameStyle: AttributeNameStyle = .inspector;
+  var visibleColumns: Set<AttributeDefinition> = Set(AttributeDefinition.allCases);
 
   enum ViewMode: String, CaseIterable {
-    case list = "リスト";
+    case table = "テーブル";
     case tree = "ツリー";
   }
 
@@ -24,9 +26,13 @@ final class InspectorViewModel {
   private let applicationService = ApplicationService();
   private let highlightService = HighlightOverlayService();
 
+  let maxDepthLimit: Int = 50;
+  var totalElementCount: Int { cachedFlatElements.count; }
+  var maxDepth: Int { cachedFlatElements.map(\.depth).max() ?? 0; }
+
   var filteredElements: [AccessibilityElement] {
     cachedFlatElements.filter { element in
-      filter.matches(element) && filter.matchesRegion(element);
+      filter.matches(element);
     };
   }
 
@@ -47,8 +53,8 @@ final class InspectorViewModel {
     errorMessage = nil;
 
     let pid = app.id;
+    let service = accessibilityService;
     Task.detached {
-      let service = AccessibilityService();
       let root = service.fetchElementTree(for: pid);
       await MainActor.run {
         self.rootElement = root;
@@ -63,8 +69,18 @@ final class InspectorViewModel {
 
   func selectElement(_ element: AccessibilityElement) {
     selectedElement = element;
-    selectedElementAttributes = accessibilityService.allAttributes(of: element.axElement);
     highlightElement(element);
+
+    let axElement = element.axElement;
+    let service = accessibilityService;
+    Task.detached {
+      let attrs = service.allAttributes(of: axElement);
+      await MainActor.run {
+        if self.selectedElement?.id == element.id {
+          self.selectedElementAttributes = attrs;
+        }
+      };
+    };
   }
 
   func highlightElement(_ element: AccessibilityElement?) {
@@ -77,7 +93,4 @@ final class InspectorViewModel {
     highlightService.highlight(rect: CGRect(origin: pos, size: size));
   }
 
-  func clearHighlight() {
-    highlightService.hide();
-  }
 }

@@ -2,7 +2,6 @@ import SwiftUI
 
 struct ElementTreeNodeView: View {
   let element: AccessibilityElement;
-  let isSelected: Bool;
 
   var body: some View {
     HStack {

@@ -47,4 +47,54 @@ extension AXUIElement {
     AXValueGetValue(value as! AXValue, .cgSize, &size);
     return size;
   }
+
+  var subrole: String? {
+    typedValue(kAXSubroleAttribute);
+  }
+
+  var axDescription: String? {
+    typedValue(kAXDescriptionAttribute);
+  }
+
+  var help: String? {
+    typedValue(kAXHelpAttribute);
+  }
+
+  var identifier: String? {
+    typedValue(kAXIdentifierAttribute);
+  }
+
+  var isEnabled: Bool? {
+    typedValue(kAXEnabledAttribute);
+  }
+
+  var isFocused: Bool? {
+    typedValue(kAXFocusedAttribute);
+  }
+
+  var isSelected: Bool? {
+    typedValue(kAXSelectedAttribute);
+  }
+
+  var isExpanded: Bool? {
+    typedValue(kAXExpandedAttribute);
+  }
+
+  var valueDescription: String? {
+    typedValue(kAXValueDescriptionAttribute);
+  }
+
+  var minValue: String? {
+    guard let v = getValue(kAXMinValueAttribute) else { return nil; }
+    return String(describing: v);
+  }
+
+  var maxValue: String? {
+    guard let v = getValue(kAXMaxValueAttribute) else { return nil; }
+    return String(describing: v);
+  }
+
+  var placeholderValue: String? {
+    typedValue(kAXPlaceholderValueAttribute);
+  }
 }

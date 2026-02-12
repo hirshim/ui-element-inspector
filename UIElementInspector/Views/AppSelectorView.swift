@@ -7,7 +7,7 @@ struct AppSelectorView: View {
 
   var body: some View {
     Picker("アプリ", selection: $selectedApp) {
-      Text("選択してください").tag(AppInfo?.none);
+      Text("アプリケーション選択").tag(AppInfo?.none);
       ForEach(apps) { app in
         Label {
           Text(app.name);

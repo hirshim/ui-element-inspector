@@ -12,4 +12,12 @@ struct AppInfo: Identifiable, Hashable {
     self.bundleIdentifier = app.bundleIdentifier;
     self.icon = app.icon;
   }
+
+  static func == (lhs: AppInfo, rhs: AppInfo) -> Bool {
+    lhs.id == rhs.id;
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(id);
+  }
 }

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,17 +12,16 @@
 		1EBC5A86EFD649EF08EC8E01 /* UIElementInspectorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DD9E14206453CFA6B331B0 /* UIElementInspectorApp.swift */; };
 		3F8C2DA135C80ACF23010AAF /* ElementTreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9146C6E1762B722629EE5642 /* ElementTreeView.swift */; };
 		44979CBDB073288657A4A800 /* HighlightOverlayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2EFD92D78467C157DB6D1F /* HighlightOverlayService.swift */; };
-		5502E42C16C40E3638341201 /* ElementListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D604599B2D70EB11664475BD /* ElementListRowView.swift */; };
 		6083C531960F6CE4D674D503 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73E037972B12E3CEF596F1 /* ContentView.swift */; };
 		697DEA2AC2DE620FF84C51D0 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54ED771A3C1D8DF4C24BF92D /* AppInfo.swift */; };
 		760A0B2E4BD3F236B840D0FC /* AXUIElement+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29D69A684A363323F4706A1 /* AXUIElement+Extensions.swift */; };
 		768D8A8710BF3A04C62BEF84 /* AppSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B23D00241FC02F6F0EFFFB8 /* AppSelectorView.swift */; };
 		8663E123B605B9BD2222D869 /* ApplicationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5841D37CA65EC507CC115091 /* ApplicationService.swift */; };
 		9494A4E65341B0E9300E8422 /* PermissionPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CE2F41B97CA92327F4F1D69 /* PermissionPromptView.swift */; };
+		988070FF2E9321CFB1B52784 /* AttributeNameStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F219F580CD8C4E048828AD6 /* AttributeNameStyle.swift */; };
 		C28DCFD26D7BCF16A51D4683 /* AccessibilityElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C996B878C440B2249B8290 /* AccessibilityElement.swift */; };
 		D52782EE8936944DB5550E0E /* ElementTreeNodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7B03FAF8B3C119FC6A8FCA /* ElementTreeNodeView.swift */; };
 		DC61FE33009F66F3F2DFA522 /* ElementListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4BC314B36AD594B4E6E80C4 /* ElementListView.swift */; };
-		DD152EFC7BAAF601F071E8C5 /* MouseTrackingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4267A73170DFF38F6E2E155 /* MouseTrackingService.swift */; };
 		E75D1452E0975BF9D3AC2B5B /* ElementFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D97B284839C78EB36AF873 /* ElementFilter.swift */; };
 		FA6050DCD412DA0FF77A42EF /* InspectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3763DFFC84207CBEE9D2A7 /* InspectorViewModel.swift */; };
 		FB777DE2CDFE852647EE7410 /* ElementFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51613326E92770685FB1B0F4 /* ElementFilterView.swift */; };
@@ -38,6 +37,7 @@
 		51613326E92770685FB1B0F4 /* ElementFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementFilterView.swift; sourceTree = "<group>"; };
 		54ED771A3C1D8DF4C24BF92D /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
 		5841D37CA65EC507CC115091 /* ApplicationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationService.swift; sourceTree = "<group>"; };
+		5F219F580CD8C4E048828AD6 /* AttributeNameStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeNameStyle.swift; sourceTree = "<group>"; };
 		6D6BC0EB995758BDFB7AE82A /* UIElementInspector.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UIElementInspector.entitlements; sourceTree = "<group>"; };
 		8C3763DFFC84207CBEE9D2A7 /* InspectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorViewModel.swift; sourceTree = "<group>"; };
 		8CE2F41B97CA92327F4F1D69 /* PermissionPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionPromptView.swift; sourceTree = "<group>"; };
@@ -47,10 +47,8 @@
 		B6D97B284839C78EB36AF873 /* ElementFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementFilter.swift; sourceTree = "<group>"; };
 		BA309996FF03CADCEAAD40B1 /* AccessibilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityService.swift; sourceTree = "<group>"; };
 		D5C996B878C440B2249B8290 /* AccessibilityElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityElement.swift; sourceTree = "<group>"; };
-		D604599B2D70EB11664475BD /* ElementListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementListRowView.swift; sourceTree = "<group>"; };
 		DD73E037972B12E3CEF596F1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F29D69A684A363323F4706A1 /* AXUIElement+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AXUIElement+Extensions.swift"; sourceTree = "<group>"; };
-		F4267A73170DFF38F6E2E155 /* MouseTrackingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseTrackingService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -59,6 +57,7 @@
 			children = (
 				D5C996B878C440B2249B8290 /* AccessibilityElement.swift */,
 				54ED771A3C1D8DF4C24BF92D /* AppInfo.swift */,
+				5F219F580CD8C4E048828AD6 /* AttributeNameStyle.swift */,
 				B6D97B284839C78EB36AF873 /* ElementFilter.swift */,
 			);
 			path = Models;
@@ -87,7 +86,6 @@
 				DD73E037972B12E3CEF596F1 /* ContentView.swift */,
 				A1FC7079CC28CE9EC1456ADF /* ElementDetailView.swift */,
 				51613326E92770685FB1B0F4 /* ElementFilterView.swift */,
-				D604599B2D70EB11664475BD /* ElementListRowView.swift */,
 				A4BC314B36AD594B4E6E80C4 /* ElementListView.swift */,
 				3D7B03FAF8B3C119FC6A8FCA /* ElementTreeNodeView.swift */,
 				9146C6E1762B722629EE5642 /* ElementTreeView.swift */,
@@ -102,7 +100,6 @@
 				BA309996FF03CADCEAAD40B1 /* AccessibilityService.swift */,
 				5841D37CA65EC507CC115091 /* ApplicationService.swift */,
 				0A2EFD92D78467C157DB6D1F /* HighlightOverlayService.swift */,
-				F4267A73170DFF38F6E2E155 /* MouseTrackingService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -184,6 +181,7 @@
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					CAAEBB5695D9517017559A61 = {
+						DevelopmentTeam = 7YNKVG32P3;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -198,6 +196,7 @@
 			);
 			mainGroup = 4B455AB86D12502C7E44E681;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -217,17 +216,16 @@
 				697DEA2AC2DE620FF84C51D0 /* AppInfo.swift in Sources */,
 				768D8A8710BF3A04C62BEF84 /* AppSelectorView.swift in Sources */,
 				8663E123B605B9BD2222D869 /* ApplicationService.swift in Sources */,
+				988070FF2E9321CFB1B52784 /* AttributeNameStyle.swift in Sources */,
 				6083C531960F6CE4D674D503 /* ContentView.swift in Sources */,
 				0DAB803350266D98B1281046 /* ElementDetailView.swift in Sources */,
 				E75D1452E0975BF9D3AC2B5B /* ElementFilter.swift in Sources */,
 				FB777DE2CDFE852647EE7410 /* ElementFilterView.swift in Sources */,
-				5502E42C16C40E3638341201 /* ElementListRowView.swift in Sources */,
 				DC61FE33009F66F3F2DFA522 /* ElementListView.swift in Sources */,
 				D52782EE8936944DB5550E0E /* ElementTreeNodeView.swift in Sources */,
 				3F8C2DA135C80ACF23010AAF /* ElementTreeView.swift in Sources */,
 				44979CBDB073288657A4A800 /* HighlightOverlayService.swift in Sources */,
 				FA6050DCD412DA0FF77A42EF /* InspectorViewModel.swift in Sources */,
-				DD152EFC7BAAF601F071E8C5 /* MouseTrackingService.swift in Sources */,
 				9494A4E65341B0E9300E8422 /* PermissionPromptView.swift in Sources */,
 				1EBC5A86EFD649EF08EC8E01 /* UIElementInspectorApp.swift in Sources */,
 			);

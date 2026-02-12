@@ -3,7 +3,6 @@ import SwiftUI
 struct PermissionPromptView: View {
   let onRequest: () -> Void;
   let onRecheck: () -> Void;
-  @State private var debugInfo: String = "";
 
   var body: some View {
     VStack(spacing: 20) {
@@ -34,33 +33,23 @@ struct PermissionPromptView: View {
       HStack(spacing: 12) {
         Button("権限を要求") {
           onRequest();
-          updateDebugInfo();
         }
         .buttonStyle(.borderedProminent);
 
         Button("再確認") {
           onRecheck();
-          updateDebugInfo();
         }
         .buttonStyle(.bordered);
       }
 
-      if !debugInfo.isEmpty {
-        Text(debugInfo)
-          .font(.caption)
-          .foregroundStyle(.secondary)
-          .padding(.top);
-      }
+      #if DEBUG
+      Text("デバッグ: AXIsProcessTrusted = \(AccessibilityService.isTrusted())")
+        .font(.caption)
+        .foregroundStyle(.secondary)
+        .padding(.top);
+      #endif
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .padding(40)
-    .onAppear {
-      updateDebugInfo();
-    };
-  }
-
-  private func updateDebugInfo() {
-    let isTrusted = AccessibilityService.isTrusted();
-    debugInfo = "デバッグ: AXIsProcessTrusted = \(isTrusted)";
+    .padding(40);
   }
 }

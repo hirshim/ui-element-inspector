@@ -21,12 +21,12 @@ struct ElementTreeView: View {
         ForEach(root.children) { element in
           TreeNodeContent(
             element: element,
-            selectedElement: selectedElement,
             expandedItems: $expandedItems,
             onHover: onHover
           );
         }
       }
+      .background(ListFocuser())
       .onAppear {
         expandToSelected(in: root);
       }
@@ -55,7 +55,7 @@ struct ElementTreeView: View {
     return nil;
   }
 
-  private func findElement(id: UUID?, in element: AccessibilityElement) -> AccessibilityElement? {
+  private func findElement(id: String?, in element: AccessibilityElement) -> AccessibilityElement? {
     guard let id else { return nil; }
     if element.id == id { return element; }
     for child in element.children {
@@ -67,15 +67,37 @@ struct ElementTreeView: View {
   }
 }
 
+private struct ListFocuser: NSViewRepresentable {
+  func makeNSView(context: Context) -> NSView {
+    let view = NSView();
+    DispatchQueue.main.async {
+      guard let contentView = view.window?.contentView else { return; }
+      if let outlineView = Self.findView(ofType: NSOutlineView.self, in: contentView) {
+        view.window?.makeFirstResponder(outlineView);
+      }
+    };
+    return view;
+  }
+
+  func updateNSView(_ nsView: NSView, context: Context) {}
+
+  private static func findView<T: NSView>(ofType type: T.Type, in view: NSView) -> T? {
+    if let found = view as? T { return found; }
+    for subview in view.subviews {
+      if let found = findView(ofType: type, in: subview) { return found; }
+    }
+    return nil;
+  }
+}
+
 private struct TreeNodeContent: View {
   let element: AccessibilityElement;
-  let selectedElement: AccessibilityElement?;
   @Binding var expandedItems: Set<String>;
   let onHover: ((AccessibilityElement?) -> Void)?;
 
   var body: some View {
     if element.children.isEmpty {
-      ElementTreeNodeView(element: element, isSelected: element.id == selectedElement?.id)
+      ElementTreeNodeView(element: element)
         .tag(element.id)
         .onHover { isHovered in
           onHover?(isHovered ? element : nil);
@@ -96,13 +118,12 @@ private struct TreeNodeContent: View {
         ForEach(element.children) { child in
           TreeNodeContent(
             element: child,
-            selectedElement: selectedElement,
             expandedItems: $expandedItems,
             onHover: onHover
           );
         }
       } label: {
-        ElementTreeNodeView(element: element, isSelected: element.id == selectedElement?.id)
+        ElementTreeNodeView(element: element)
           .tag(element.id)
           .onHover { isHovered in
             onHover?(isHovered ? element : nil);

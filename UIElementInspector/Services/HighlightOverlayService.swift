@@ -1,5 +1,6 @@
 import AppKit
 
+@MainActor
 final class HighlightOverlayService {
   private var overlayWindow: NSWindow?;
   private var currentRect: CGRect?;
