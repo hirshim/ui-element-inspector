@@ -5,10 +5,14 @@ macOS用のアクセシビリティ開発者ツール。実行中のアプリケ
 ## 機能
 
 - 実行中のアプリケーション一覧表示
-- UI要素階層の表示（リスト/ツリー表示）
-- 要素の詳細情報表示（role, title, value, position, size, 全属性）
-- テキスト検索とフィルタリング（role/title/value）
+- UI要素階層の表示（テーブル18属性列 / ツリー表示）
+- 要素の詳細情報表示（4カテゴリ分類: 情報属性・視覚状態・値属性・その他全属性）
+- テキスト検索（全18属性横断、大文字小文字区別なし）
 - マウスホバーでUI要素をハイライト
+- マウスピック: 対象アプリ上でクリックして要素を直接選択（⌘P）
+- 範囲選択フィルタ: 画面上でドラッグして矩形内の要素だけに絞り込み（⌘D）
+- 属性名形式の切り替え（SDK形式 / Inspector形式）
+- 列の表示/非表示トグル
 
 ## 動作環境
 
@@ -35,26 +39,23 @@ Cmd+R でビルド＆実行し、権限要求画面で「権限を要求」を�
 ## 使い方
 
 1. 上部のドロップダウンから検査したいアプリケーションを選択
-2. リスト表示またはツリー表示でUI要素を閲覧
-3. テキスト検索・フィルタ（Role / Title / Value）で絞り込み
+2. テーブル表示またはツリー表示でUI要素を閲覧
+3. テキスト検索で絞り込み（全18属性を横断検索）
 4. 要素にマウスをホバーすると、対象アプリ上でハイライト表示
 5. 要素を選択すると、右ペインに全属性の詳細を表示
+6. ⌘P でマウスピックモード: 対象アプリ上でクリックして要素を直接選択
+7. ⌘D で範囲選択モード: 画面上でドラッグして矩形内の要素にフィルタリング
 
 ## 開発
-
-### バンドルID
-
-- Debug: `com.example.UIElementInspector.dev`
-- Release: `com.example.UIElementInspector`
 
 ### アーキテクチャ
 
 | レイヤー | 主要ファイル |
 |---|---|
 | Models | `AccessibilityElement`, `AppInfo`, `ElementFilter` |
-| Services | `AccessibilityService`, `ApplicationService`, `HighlightOverlayService` |
+| Services | `AccessibilityService`, `ApplicationService`, `HighlightOverlayService`, `MousePickingService`, `RegionSelectionService` |
 | ViewModels | `InspectorViewModel` |
-| Views | `ContentView`, `ElementListView`, `ElementTreeView`, `ElementDetailView` |
+| Views | `ContentView`, `ElementListView`, `ElementTreeView`, `ElementDetailView`, `ElementFilterView` |
 | Utilities | `AXUIElement+Extensions` |
 
 ### アクセシビリティ権限について

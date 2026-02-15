@@ -35,14 +35,15 @@ open UIElementInspector.xcodeproj
 
 ## アーキテクチャ
 
-MVVM構成。`InspectorViewModel`が`@MainActor @Observable`で状態管理し、3つのServiceがAX API・アプリ列挙・ハイライト描画を担当。
+MVVM構成。`InspectorViewModel`が`@MainActor @Observable`で状態管理し、5つのServiceが各機能を担当。
 
 ```
 App/          → @main エントリポイント
 Models/       → AccessibilityElement, AppInfo, ElementFilter
-Services/     → AccessibilityService, ApplicationService, HighlightOverlayService, MouseTrackingService
+Services/     → AccessibilityService, ApplicationService, HighlightOverlayService,
+                MousePickingService, RegionSelectionService
 ViewModels/   → InspectorViewModel（唯一のVM、全状態を集約）
-Views/        → ContentView（権限ゲート + NavigationSplitView）、各サブビュー
+Views/        → ContentView（権限ゲート + HStack分割）、各サブビュー
 Utilities/    → AXUIElement+Extensions（CF APIのSwiftラッパー）
 Resources/    → Info.plist, entitlements, Assets.xcassets
 ```
@@ -62,11 +63,20 @@ Resources/    → Info.plist, entitlements, Assets.xcassets
 ### 座標系変換
 - AX座標: 左上原点、Y軸下向き
 - スクリーン座標: 左下原点、Y軸上向き
-- `HighlightOverlayService`で変換処理
+- `HighlightOverlayService`、`MousePickingService`、`RegionSelectionService`で変換処理
+- 変換式: `axY = primaryScreenHeight - screenY - height`（プライマリスクリーン基準）
 
 ### ツリービュー展開状態
-- `expandedItems: Set<String>`で`stableID`（role + indexPath）ベースの展開管理
-- UUID（リフレッシュで再生成）ではなくstableIDを使うことでツリー更新後も展開状態を維持
+
+- `expandedItems: Set<String>`で`id`（role + indexPath）ベースの展開管理
+- UUID（リフレッシュで再生成）ではなくstable IDを使うことでツリー更新後も展開状態を維持
+
+### マウスピック・範囲選択
+
+- PickModeとRegionSelectModeは排他制御（一方を開始すると他方を自動停止）
+- `MousePickingService`: タイマーポーリング（50ms）、`queryInFlight`フラグでAX API呼び出しを直列化
+- `RegionSelectionService`: `KeyableWindow`（borderless NSWindowサブクラス、`canBecomeKey=true`）でESCキー受信
+- オーバーレイウィンドウは`CGShieldingWindowLevel`で最前面表示
 
 ## コードスタイル
 

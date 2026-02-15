@@ -13,8 +13,8 @@ macOS向けのUI要素インスペクター。Accessibility APIを利用して�
 | 3 | 要素詳細表示（4カテゴリ分類） | ✅ 完了 | `ElementDetailView` |
 | 4 | テキスト検索（全18属性横断） | ✅ 完了 | `ElementFilter`, `ElementFilterView` |
 | 5 | テーブル/ツリーのホバーでハイライト | ✅ 完了 | `HighlightOverlayService` |
-| 6 | マウスピック（対象アプリ上で要素選択） | ❌ 未実装 | — |
-| 7 | 範囲選択フィルタ（ドラッグで矩形指定） | ⚠️ 部分実装 | `ElementFilter.regionFilter`, `MouseTrackingService` |
+| 6 | マウスピック（対象アプリ上で要素選択） | ✅ 完了 | `MousePickingService`, `InspectorViewModel` |
+| 7 | 範囲選択フィルタ（ドラッグで矩形指定） | ✅ 完了 | `RegionSelectionService`, `ElementFilter.regionFilter` |
 | 8 | 属性名トグル（SDK / Inspector形式） | ✅ 完了 | `AttributeNameStyle`, `InspectorViewModel` |
 
 ---
@@ -147,11 +147,12 @@ SwiftUI `Table` を使用した18属性列＋チェックボックス列のテ�
 6. ピックモードが自動終了し、通常モードに戻る
 7. Escキーでピックモードをキャンセルできる
 
-#### 技術設計
+#### 技術設計（マウスピック）
 
-- `AXUIElementCopyElementAtPosition(_:_:_:_:)` で座標から要素を特定
-- NSEvent.mouseLocation（左下原点）→ AX座標（左上原点）への変換
-- `NSEvent.addGlobalMonitorForEvents` で mouseMoved / leftMouseDown を監視
+- `MousePickingService`: タイマーポーリング（50ms）でマウス位置を監視し、`AXUIElementCopyElementAtPosition`で要素を特定
+- NSEvent.mouseLocation（左下原点）→ AX座標（左上原点）への変換（プライマリスクリーン基準）
+- `NSEvent.addGlobalMonitorForEvents`でクリック監視、`addLocalMonitorForEvents`でESCキー監視
+- PickModeとRegionSelectModeは排他制御（一方を開始すると他方を停止）
 
 ---
 
@@ -161,8 +162,14 @@ SwiftUI `Table` を使用した18属性列＋チェックボックス列のテ�
 
 テーブル表示時に「範囲選択」ボタンを押して画面上でドラッグ。矩形範囲内のUI要素だけにフィルタリングする。
 
-- 既存の `ElementFilter.regionFilter: CGRect?` と `matchesRegion()` を活用
-- `RegionSelectionService` でフルスクリーンオーバーレイ + ドラッグUIを実装
+#### 技術設計（範囲選択）
+
+- `RegionSelectionService`: `KeyableWindow`（`canBecomeKey=true`のNSWindowサブクラス）でフルスクリーンオーバーレイを表示
+- `RegionSelectionView`（NSView）でドラッグ矩形描画、ESCキーキャンセル、最小5px閾値
+- Screen座標（左下原点）→ AX座標（左上原点）への変換後、`ElementFilter.regionFilter`にセット
+- `CGRect.contains(CGRect)` で完全包含判定（要素矩形が選択矩形に完全に含まれる場合のみマッチ）
+- テキスト検索とのAND条件、フィルタバーに座標表示＋✕クリアボタン
+- ツリーモードでは無効（テーブル表示時のみ使用可能）
 
 ---
 
@@ -174,18 +181,19 @@ SwiftUI `Table` を使用した18属性列＋チェックボックス列のテ�
 2. モデル層の拡張（AXUIElement拡張、AccessibilityElement 12属性追加、buildElement更新）
 3. ビュー層の全面更新（Filter辞書化、FilterView 3行、ListView 18列、DetailView 4セクション、ContentView トグル追加）
 
-### フェーズ2: マウスピック（機能6）
+### フェーズ2: マウスピック（機能6）✅ 完了
 
 1. `AXUIElement+Extensions` に `elementAtPosition` を追加
-2. `InspectorViewModel` にピックモード状態管理を追加
-3. `MouseTrackingService` にクリック・Esc監視を追加
-4. ツールバーにピックボタンを追加
+2. `MousePickingService` を新規作成（タイマーポーリング、グローバルクリック監視、ESCキャンセル）
+3. `InspectorViewModel` にピックモード状態管理を追加
+4. ツールバーにピックボタン（⌘P）を追加
 
-### フェーズ3: 範囲選択フィルタ（機能7）
+### フェーズ3: 範囲選択フィルタ（機能7）✅ 完了
 
-1. `RegionSelectionService` を新規作成
+1. `RegionSelectionService` を新規作成（KeyableWindow + RegionSelectionView）
 2. ドラッグ確定 → AX座標に変換 → `ElementFilter.regionFilter` にセット
-3. `ElementFilterView` に範囲表示・解除UIを追加
+3. `ElementFilterView` に範囲バッジ（座標表示＋✕クリア）を追加
+4. ツールバーに範囲選択ボタン（⌘D）を追加
 
 ---
 
@@ -209,8 +217,14 @@ func elementAtPosition(_ x: Float, _ y: Float) -> AXUIElement? {
 ### スクリーン座標 → AX座標 変換
 
 ```swift
+// ポイント変換（MousePickingService）
 let screenPos = NSEvent.mouseLocation;  // 左下原点
-let allScreensHeight = NSScreen.screens.map { $0.frame.maxY }.max() ?? 0;
+let primaryScreenHeight = NSScreen.screens.first?.frame.height ?? 0;
 let axX = Float(screenPos.x);
-let axY = Float(allScreensHeight - screenPos.y);
+let axY = Float(primaryScreenHeight - screenPos.y);
+
+// 矩形変換（RegionSelectionService）
+// NSView座標（左下原点）→ AX座標（左上原点）
+let axRect = CGRect(x: rect.x, y: screenH - rect.y - rect.height,
+                    width: rect.width, height: rect.height);
 ```
