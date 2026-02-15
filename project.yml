@@ -33,6 +33,7 @@ targets:
         ENABLE_HARDENED_RUNTIME: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        PRODUCT_NAME: UI Element Inspector
         COMBINE_HIDPI_IMAGES: YES
     info:
       path: UIElementInspector/Resources/Info.plist

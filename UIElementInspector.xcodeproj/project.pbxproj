@@ -332,6 +332,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				PRODUCT_NAME = "UI Element Inspector";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -351,6 +352,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				PRODUCT_NAME = "UI Element Inspector";
 				SDKROOT = macosx;
 			};
 			name = Release;

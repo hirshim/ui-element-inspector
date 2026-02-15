@@ -81,7 +81,7 @@ Cmd+R でビルド＆実行し、上記と同じ手順でアクセシビリテ�
 
 ```bash
 # アプリの再起動
-killall UIElementInspector
+killall "UI Element Inspector"
 # Xcode で Cmd+R
 
 # クリーンビルド
