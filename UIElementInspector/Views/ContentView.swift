@@ -81,13 +81,11 @@ struct ContentView: View {
         onOpen: { viewModel.loadRunningApps(); }
       )
       .onChange(of: viewModel.selectedApp) { oldValue, newValue in
-        if newValue?.id != oldValue?.id, newValue != nil {
+        if let app = newValue, app.id != oldValue?.id {
           viewModel.stopPickMode();
           viewModel.stopRegionSelection();
           viewModel.clearRegionFilter();
-          viewModel.selectedElement = nil;
-          viewModel.errorMessage = nil;
-          viewModel.refreshElementTree();
+          viewModel.selectApp(app);
         }
       };
 

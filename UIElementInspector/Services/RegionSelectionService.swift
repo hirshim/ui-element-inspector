@@ -10,9 +10,13 @@ final class RegionSelectionService {
   func start() {
     guard overlayWindow == nil else { return; }
 
-    guard let screen = NSScreen.screens.first else { return; }
+    let screens = NSScreen.screens;
+    guard !screens.isEmpty else { return; }
+    let unionFrame = screens.dropFirst().reduce(screens[0].frame) { $0.union($1.frame) };
+    let primaryHeight = screens[0].frame.height;
+
     let window = KeyableWindow(
-      contentRect: screen.frame,
+      contentRect: unionFrame,
       styleMask: .borderless,
       backing: .buffered,
       defer: false
@@ -24,7 +28,8 @@ final class RegionSelectionService {
     window.hasShadow = false;
 
     let view = RegionSelectionView();
-    view.screenHeight = screen.frame.height;
+    view.screenHeight = primaryHeight;
+    view.windowOrigin = unionFrame.origin;
     view.onComplete = { [weak self] region in
       self?.onRegionSelected?(region);
       self?.stop();
@@ -57,6 +62,7 @@ private final class KeyableWindow: NSWindow {
 
 private final class RegionSelectionView: NSView {
   var screenHeight: CGFloat = 0;
+  var windowOrigin: CGPoint = .zero;
   var onComplete: ((_ region: CGRect) -> Void)?;
   var onCancel: (() -> Void)?;
 
@@ -132,14 +138,14 @@ private final class RegionSelectionView: NSView {
     }
   }
 
-  // Screen座標（左下原点）→ AX座標（左上原点）
-  private func screenToAXRect(_ screenRect: CGRect) -> CGRect {
+  // ビューローカル座標 → AX座標（プライマリスクリーン左上原点）
+  private func screenToAXRect(_ viewRect: CGRect) -> CGRect {
     let h = screenHeight;
     return CGRect(
-      x: screenRect.origin.x,
-      y: h - screenRect.origin.y - screenRect.height,
-      width: screenRect.width,
-      height: screenRect.height
+      x: windowOrigin.x + viewRect.origin.x,
+      y: h - (windowOrigin.y + viewRect.origin.y) - viewRect.height,
+      width: viewRect.width,
+      height: viewRect.height
     );
   }
 }

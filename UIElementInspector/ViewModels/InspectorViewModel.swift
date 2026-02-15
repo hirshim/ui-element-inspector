@@ -30,6 +30,8 @@ final class InspectorViewModel {
   private let highlightService = HighlightOverlayService();
   private let mousePickingService = MousePickingService();
   private let regionSelectionService = RegionSelectionService();
+  private let axObserverService = AXObserverService();
+  private var terminationObserver: Any?;
 
   let maxDepthLimit: Int = 50;
   var totalElementCount: Int { cachedFlatElements.count; }
@@ -49,15 +51,22 @@ final class InspectorViewModel {
     selectedApp = app;
     selectedElement = nil;
     errorMessage = nil;
+    observeAppTermination(pid: app.id);
+    startObserving(pid: app.id);
     refreshElementTree();
   }
 
   func refreshElementTree(completion: (@MainActor @Sendable () -> Void)? = nil) {
     guard let app = selectedApp else { return; }
-    isLoading = true;
-    errorMessage = nil;
 
     let pid = app.id;
+    guard NSRunningApplication(processIdentifier: pid) != nil else {
+      handleAppTerminated();
+      return;
+    }
+
+    isLoading = true;
+    errorMessage = nil;
     let service = accessibilityService;
     Task.detached {
       let root = service.fetchElementTree(for: pid);
@@ -112,7 +121,9 @@ final class InspectorViewModel {
         self.highlightService.highlight(rect: CGRect(origin: position, size: size));
       }
       if let matched = self.findElementInTree(axElement: axElement) {
-        self.selectedElement = matched;
+        if self.selectedElement?.id != matched.id {
+          self.selectedElement = matched;
+        }
       }
     };
 
@@ -168,6 +179,41 @@ final class InspectorViewModel {
 
   func clearRegionFilter() {
     filter.regionFilter = nil;
+  }
+
+  // MARK: - App Lifecycle
+
+  private func observeAppTermination(pid: pid_t) {
+    if let old = terminationObserver {
+      NSWorkspace.shared.notificationCenter.removeObserver(old);
+    }
+    terminationObserver = NSWorkspace.shared.notificationCenter.addObserver(
+      forName: NSWorkspace.didTerminateApplicationNotification,
+      object: nil, queue: .main
+    ) { [weak self] notification in
+      guard let self,
+            let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
+            app.processIdentifier == pid else { return; }
+      self.handleAppTerminated();
+    };
+  }
+
+  private func startObserving(pid: pid_t) {
+    axObserverService.onElementsChanged = { [weak self] in
+      self?.refreshElementTree();
+    };
+    axObserverService.start(for: pid);
+  }
+
+  private func handleAppTerminated() {
+    stopPickMode();
+    stopRegionSelection();
+    axObserverService.stop();
+    rootElement = nil;
+    cachedFlatElements = [];
+    selectedElement = nil;
+    selectedElementAttributes = [];
+    errorMessage = "対象アプリケーションが終了しました。";
   }
 
   // MARK: - Helpers
