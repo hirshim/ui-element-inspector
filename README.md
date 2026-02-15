@@ -17,10 +17,23 @@ macOS用のアクセシビリティ開発者ツール。実行中のアプリケ
 ## 動作環境
 
 - macOS 15.0以降
-- Xcode 16.0以降
-- Swift 6.0
 
-## セットアップ
+## インストール
+
+### ダウンロード（推奨）
+
+[Releases](https://github.com/hirshim/ui-element-inspector/releases/latest) ページから `UIElementInspector.zip` をダウンロードし、展開してアプリケーションフォルダに移動してください。
+
+初回起動時にアクセシビリティ権限の付与が必要です:
+
+1. UIElementInspector を起動
+2. 権限要求画面で「権限を要求」をクリック
+3. システム設定 > プライバシーとセキュリティ > アクセシビリティ で `UIElementInspector` にチェック
+4. アプリに戻って「再確認」をクリック
+
+### ソースからビルド
+
+Xcode 16.0以降、Swift 6.0が必要です。
 
 ```bash
 # xcodegen をインストール（未インストールの場合）
@@ -33,8 +46,7 @@ xcodegen generate
 open UIElementInspector.xcodeproj
 ```
 
-Cmd+R でビルド＆実行し、権限要求画面で「権限を要求」をクリック。
-システム設定 > プライバシーとセキュリティ > アクセシビリティ で `UIElementInspector.dev` にチェックを入れ、アプリに戻って「再確認」をクリック。
+Cmd+R でビルド＆実行し、上記と同じ手順でアクセシビリティ権限を付与してください。
 
 ## 使い方
 
