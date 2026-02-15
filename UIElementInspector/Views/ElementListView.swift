@@ -16,6 +16,7 @@ struct ElementListView: View {
   }
 
   var body: some View {
+    ScrollViewReader { proxy in
     Table(of: AccessibilityElement.self, selection: $selectedID, columnCustomization: $columnCustomization) {
       Group {
         TableColumn(header(.role)) { (element: AccessibilityElement) in
@@ -174,8 +175,12 @@ struct ElementListView: View {
     .onChange(of: selectedElement?.id) { _, newID in
       if selectedID != newID {
         selectedID = newID;
+        if let newID {
+          proxy.scrollTo(newID, anchor: UnitPoint(x: 0, y: 0.5));
+        }
       }
     };
+    }
   }
 
   private func syncColumnVisibility() {

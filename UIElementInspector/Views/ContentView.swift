@@ -82,6 +82,7 @@ struct ContentView: View {
       )
       .onChange(of: viewModel.selectedApp) { oldValue, newValue in
         if newValue?.id != oldValue?.id, newValue != nil {
+          viewModel.stopPickMode();
           viewModel.selectedElement = nil;
           viewModel.errorMessage = nil;
           viewModel.refreshElementTree();
@@ -101,6 +102,18 @@ struct ContentView: View {
         Image(systemName: "arrow.clockwise");
       }
       .keyboardShortcut("r", modifiers: .command);
+
+      Button(action: {
+        if viewModel.isPickMode {
+          viewModel.stopPickMode();
+        } else {
+          viewModel.startPickMode();
+        }
+      }) {
+        Image(systemName: viewModel.isPickMode ? "scope" : "target");
+      }
+      .keyboardShortcut("p", modifiers: .command)
+      .disabled(viewModel.selectedApp == nil);
 
       Spacer();
 
@@ -143,8 +156,8 @@ struct ContentView: View {
             ElementListView(
               elements: viewModel.filteredElements,
               selectedElement: viewModel.selectedElement,
-              onSelect: { viewModel.selectElement($0); },
-              onHover: { viewModel.highlightElement($0); },
+              onSelect: { if !viewModel.isPickMode { viewModel.selectElement($0); } },
+              onHover: { if !viewModel.isPickMode { viewModel.highlightElement($0); } },
               attributeNameStyle: viewModel.attributeNameStyle,
               visibleColumns: viewModel.visibleColumns
             );
@@ -152,8 +165,8 @@ struct ContentView: View {
             ElementTreeView(
               rootElement: viewModel.rootElement,
               selectedElement: viewModel.selectedElement,
-              onSelect: { viewModel.selectElement($0); },
-              onHover: { viewModel.highlightElement($0); }
+              onSelect: { if !viewModel.isPickMode { viewModel.selectElement($0); } },
+              onHover: { if !viewModel.isPickMode { viewModel.highlightElement($0); } }
             );
           }
         }

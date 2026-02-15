@@ -21,10 +21,13 @@ final class InspectorViewModel {
     case tree = "ツリー";
   }
 
+  var isPickMode: Bool = false;
+
   private var cachedFlatElements: [AccessibilityElement] = [];
   private let accessibilityService = AccessibilityService();
   private let applicationService = ApplicationService();
   private let highlightService = HighlightOverlayService();
+  private let mousePickingService = MousePickingService();
 
   let maxDepthLimit: Int = 50;
   var totalElementCount: Int { cachedFlatElements.count; }
@@ -47,7 +50,7 @@ final class InspectorViewModel {
     refreshElementTree();
   }
 
-  func refreshElementTree() {
+  func refreshElementTree(completion: (@MainActor @Sendable () -> Void)? = nil) {
     guard let app = selectedApp else { return; }
     isLoading = true;
     errorMessage = nil;
@@ -63,6 +66,7 @@ final class InspectorViewModel {
         if root == nil {
           self.errorMessage = "要素を取得できませんでした。アプリがアクセシビリティに対応していない可能性があります。";
         }
+        completion?();
       };
     };
   }
@@ -91,6 +95,58 @@ final class InspectorViewModel {
       return;
     }
     highlightService.highlight(rect: CGRect(origin: pos, size: size));
+  }
+
+  // MARK: - Pick Mode
+
+  func startPickMode() {
+    guard let app = selectedApp, !isPickMode else { return; }
+    isPickMode = true;
+
+    mousePickingService.onHover = { [weak self] axElement, position, size in
+      guard let self, self.isPickMode else { return; }
+      if let position, let size {
+        self.highlightService.highlight(rect: CGRect(origin: position, size: size));
+      }
+      if let matched = self.findElementInTree(axElement: axElement) {
+        self.selectedElement = matched;
+      }
+    };
+
+    mousePickingService.onPick = { [weak self] axElement in
+      guard let self, self.isPickMode else { return; }
+      self.stopPickMode();
+      if let matched = self.findElementInTree(axElement: axElement) {
+        self.selectElement(matched);
+      } else {
+        self.refreshAndSelect(axElement: axElement);
+      }
+    };
+
+    mousePickingService.onCancel = { [weak self] in
+      self?.stopPickMode();
+    };
+
+    mousePickingService.start(for: app.id);
+  }
+
+  func stopPickMode() {
+    guard isPickMode else { return; }
+    isPickMode = false;
+    mousePickingService.stop();
+    highlightService.hide();
+  }
+
+  private func findElementInTree(axElement: AXUIElement) -> AccessibilityElement? {
+    cachedFlatElements.first { CFEqual($0.axElement, axElement) };
+  }
+
+  private func refreshAndSelect(axElement: AXUIElement) {
+    refreshElementTree { [weak self] in
+      guard let self,
+            let matched = self.findElementInTree(axElement: axElement) else { return; }
+      self.selectElement(matched);
+    };
   }
 
 }

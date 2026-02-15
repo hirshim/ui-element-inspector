@@ -34,7 +34,7 @@ final class HighlightOverlayService {
     );
     window.isOpaque = false;
     window.backgroundColor = .clear;
-    window.level = .floating;
+    window.level = NSWindow.Level(rawValue: Int(CGShieldingWindowLevel()));
     window.ignoresMouseEvents = true;
     window.hasShadow = false;
 
@@ -45,17 +45,11 @@ final class HighlightOverlayService {
   }
 
   private func convertToScreenCoordinates(_ axRect: CGRect) -> CGRect {
-    // AX座標系: 左上原点、Y軸は下向き
-    // Screen座標系: 左下原点、Y軸は上向き
+    // AX座標系: プライマリスクリーン左上原点、Y軸は下向き
+    // Screen座標系: プライマリスクリーン左下原点、Y軸は上向き
+    guard let primaryScreen = NSScreen.screens.first else { return axRect; }
 
-    // メインスクリーンの全体の高さを使って変換
-    guard let mainScreen = NSScreen.main else { return axRect; }
-
-    // すべてのスクリーンを考慮した全体の高さ
-    let allScreensHeight = NSScreen.screens.map { $0.frame.maxY }.max() ?? mainScreen.frame.height;
-
-    // Y座標を反転
-    let flippedY = allScreensHeight - axRect.origin.y - axRect.height;
+    let flippedY = primaryScreen.frame.height - axRect.origin.y - axRect.height;
 
     return CGRect(x: axRect.origin.x, y: flippedY, width: axRect.width, height: axRect.height);
   }

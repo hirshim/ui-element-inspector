@@ -97,4 +97,12 @@ extension AXUIElement {
   var placeholderValue: String? {
     typedValue(kAXPlaceholderValueAttribute);
   }
+
+  func elementAtPosition(_ x: Float, _ y: Float) -> AXUIElement? {
+    var element: AXUIElement?;
+    guard AXUIElementCopyElementAtPosition(self, x, y, &element) == .success else {
+      return nil;
+    }
+    return element;
+  }
 }

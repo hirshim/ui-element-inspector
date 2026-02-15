@@ -10,6 +10,7 @@ struct ElementTreeView: View {
 
   var body: some View {
     if let root = rootElement {
+      ScrollViewReader { proxy in
       List(selection: Binding(
         get: { selectedElement?.id },
         set: { id in
@@ -30,9 +31,13 @@ struct ElementTreeView: View {
       .onAppear {
         expandToSelected(in: root);
       }
-      .onChange(of: selectedElement?.id) { _, _ in
+      .onChange(of: selectedElement?.id) { _, newID in
         expandToSelected(in: root);
+        if let newID {
+          proxy.scrollTo(newID, anchor: UnitPoint(x: 0, y: 0.5));
+        }
       };
+      }
     } else {
       ContentUnavailableView("要素なし", systemImage: "rectangle.dashed");
     }

@@ -20,6 +20,7 @@
 		9494A4E65341B0E9300E8422 /* PermissionPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CE2F41B97CA92327F4F1D69 /* PermissionPromptView.swift */; };
 		988070FF2E9321CFB1B52784 /* AttributeNameStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F219F580CD8C4E048828AD6 /* AttributeNameStyle.swift */; };
 		C28DCFD26D7BCF16A51D4683 /* AccessibilityElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C996B878C440B2249B8290 /* AccessibilityElement.swift */; };
+		D27285839CBA251004399A6A /* MousePickingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56527E0551434E823AE7D233 /* MousePickingService.swift */; };
 		D52782EE8936944DB5550E0E /* ElementTreeNodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7B03FAF8B3C119FC6A8FCA /* ElementTreeNodeView.swift */; };
 		DC61FE33009F66F3F2DFA522 /* ElementListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4BC314B36AD594B4E6E80C4 /* ElementListView.swift */; };
 		E75D1452E0975BF9D3AC2B5B /* ElementFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D97B284839C78EB36AF873 /* ElementFilter.swift */; };
@@ -36,6 +37,7 @@
 		3D7B03FAF8B3C119FC6A8FCA /* ElementTreeNodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementTreeNodeView.swift; sourceTree = "<group>"; };
 		51613326E92770685FB1B0F4 /* ElementFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementFilterView.swift; sourceTree = "<group>"; };
 		54ED771A3C1D8DF4C24BF92D /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
+		56527E0551434E823AE7D233 /* MousePickingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MousePickingService.swift; sourceTree = "<group>"; };
 		5841D37CA65EC507CC115091 /* ApplicationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationService.swift; sourceTree = "<group>"; };
 		5F219F580CD8C4E048828AD6 /* AttributeNameStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeNameStyle.swift; sourceTree = "<group>"; };
 		6D6BC0EB995758BDFB7AE82A /* UIElementInspector.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UIElementInspector.entitlements; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				BA309996FF03CADCEAAD40B1 /* AccessibilityService.swift */,
 				5841D37CA65EC507CC115091 /* ApplicationService.swift */,
 				0A2EFD92D78467C157DB6D1F /* HighlightOverlayService.swift */,
+				56527E0551434E823AE7D233 /* MousePickingService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -226,6 +229,7 @@
 				3F8C2DA135C80ACF23010AAF /* ElementTreeView.swift in Sources */,
 				44979CBDB073288657A4A800 /* HighlightOverlayService.swift in Sources */,
 				FA6050DCD412DA0FF77A42EF /* InspectorViewModel.swift in Sources */,
+				D27285839CBA251004399A6A /* MousePickingService.swift in Sources */,
 				9494A4E65341B0E9300E8422 /* PermissionPromptView.swift in Sources */,
 				1EBC5A86EFD649EF08EC8E01 /* UIElementInspectorApp.swift in Sources */,
 			);
