@@ -22,20 +22,11 @@ macOS用のアクセシビリティ開発者ツール。実行中のアプリケ
 
 ### ダウンロード（推奨）
 
-[Releases](https://github.com/hirshim/ui-element-inspector/releases/latest) ページから `UIElementInspector.zip` をダウンロードし、展開してください。
+[Releases](https://github.com/hirshim/ui-element-inspector/releases/latest) ページから `UIElementInspector.zip` をダウンロードし、展開してアプリケーションフォルダに移動してください。アプリはDeveloper ID署名＋Apple公証済みです。
 
-初回起動時にGatekeeperの警告が表示されます。以下の手順で開いてください:
+初回起動時にアクセシビリティ権限の付与が必要です:
 
-```bash
-# ダウンロードしたアプリの検疫属性を解除
-xattr -cr UIElementInspector.app
-```
-
-または Finder で UIElementInspector.app を右クリック →「開く」→ ダイアログで「開く」をクリック。
-
-続いてアクセシビリティ権限を付与します:
-
-1. UIElementInspector を起動
+1. UI Element Inspector を起動
 2. 権限要求画面で「権限を要求」をクリック
 3. システム設定 > プライバシーとセキュリティ > アクセシビリティ で `UI Element Inspector` にチェック
 4. アプリに戻って「再確認」をクリック
