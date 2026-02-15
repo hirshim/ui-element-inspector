@@ -4,11 +4,18 @@ struct ElementFilterView: View {
   @Binding var filter: ElementFilter;
   @Binding var visibleColumns: Set<AttributeDefinition>;
   let attributeNameStyle: AttributeNameStyle;
+  var onClearRegion: (() -> Void)?;
 
   var body: some View {
     VStack(alignment: .leading, spacing: 6) {
-      TextField("", text: $filter.searchText)
-        .textFieldStyle(.roundedBorder);
+      HStack {
+        TextField("", text: $filter.searchText)
+          .textFieldStyle(.roundedBorder);
+
+        if let region = filter.regionFilter {
+          regionBadge(region);
+        }
+      }
 
       FlowLayout(spacing: 2) {
         ForEach(AttributeDefinition.allCases, id: \.self) { attr in
@@ -16,6 +23,26 @@ struct ElementFilterView: View {
         }
       }
     }
+  }
+
+  private func regionBadge(_ region: CGRect) -> some View {
+    HStack(spacing: 4) {
+      Text("(\(Int(region.origin.x)),\(Int(region.origin.y))) \(Int(region.width))\u{00D7}\(Int(region.height))")
+        .font(.caption2)
+        .foregroundStyle(.secondary);
+      Button {
+        onClearRegion?();
+      } label: {
+        Image(systemName: "xmark.circle.fill")
+          .font(.caption2)
+          .foregroundStyle(.secondary);
+      }
+      .buttonStyle(.plain);
+    }
+    .padding(.horizontal, 6)
+    .padding(.vertical, 2)
+    .background(Color.accentColor.opacity(0.15))
+    .clipShape(RoundedRectangle(cornerRadius: 4));
   }
 
   private func columnToggle(_ attr: AttributeDefinition) -> some View {

@@ -83,6 +83,8 @@ struct ContentView: View {
       .onChange(of: viewModel.selectedApp) { oldValue, newValue in
         if newValue?.id != oldValue?.id, newValue != nil {
           viewModel.stopPickMode();
+          viewModel.stopRegionSelection();
+          viewModel.clearRegionFilter();
           viewModel.selectedElement = nil;
           viewModel.errorMessage = nil;
           viewModel.refreshElementTree();
@@ -115,6 +117,19 @@ struct ContentView: View {
       .keyboardShortcut("p", modifiers: .command)
       .disabled(viewModel.selectedApp == nil);
 
+      Button(action: {
+        if viewModel.isRegionSelectMode {
+          viewModel.stopRegionSelection();
+        } else {
+          viewModel.startRegionSelection();
+        }
+      }) {
+        Image(systemName: "rectangle.dashed")
+          .foregroundStyle(viewModel.isRegionSelectMode ? Color.accentColor : .primary);
+      }
+      .keyboardShortcut("d", modifiers: .command)
+      .disabled(viewModel.selectedApp == nil || viewModel.viewMode == .tree);
+
       Spacer();
 
       Picker("属性名形式", selection: $viewModel.attributeNameStyle) {
@@ -134,7 +149,7 @@ struct ContentView: View {
   private var listArea: some View {
     VStack(spacing: 0) {
       if viewModel.viewMode == .table {
-        ElementFilterView(filter: $viewModel.filter, visibleColumns: $viewModel.visibleColumns, attributeNameStyle: viewModel.attributeNameStyle)
+        ElementFilterView(filter: $viewModel.filter, visibleColumns: $viewModel.visibleColumns, attributeNameStyle: viewModel.attributeNameStyle, onClearRegion: { viewModel.clearRegionFilter(); })
           .padding(.horizontal)
           .padding(.vertical, 8);
 

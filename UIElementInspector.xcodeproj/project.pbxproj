@@ -12,6 +12,7 @@
 		1EBC5A86EFD649EF08EC8E01 /* UIElementInspectorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DD9E14206453CFA6B331B0 /* UIElementInspectorApp.swift */; };
 		3F8C2DA135C80ACF23010AAF /* ElementTreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9146C6E1762B722629EE5642 /* ElementTreeView.swift */; };
 		44979CBDB073288657A4A800 /* HighlightOverlayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2EFD92D78467C157DB6D1F /* HighlightOverlayService.swift */; };
+		5C44ECCB729C844028B22AA5 /* RegionSelectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6327CF145FF5147FC4D74BCC /* RegionSelectionService.swift */; };
 		6083C531960F6CE4D674D503 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73E037972B12E3CEF596F1 /* ContentView.swift */; };
 		697DEA2AC2DE620FF84C51D0 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54ED771A3C1D8DF4C24BF92D /* AppInfo.swift */; };
 		760A0B2E4BD3F236B840D0FC /* AXUIElement+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29D69A684A363323F4706A1 /* AXUIElement+Extensions.swift */; };
@@ -40,6 +41,7 @@
 		56527E0551434E823AE7D233 /* MousePickingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MousePickingService.swift; sourceTree = "<group>"; };
 		5841D37CA65EC507CC115091 /* ApplicationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationService.swift; sourceTree = "<group>"; };
 		5F219F580CD8C4E048828AD6 /* AttributeNameStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeNameStyle.swift; sourceTree = "<group>"; };
+		6327CF145FF5147FC4D74BCC /* RegionSelectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionSelectionService.swift; sourceTree = "<group>"; };
 		6D6BC0EB995758BDFB7AE82A /* UIElementInspector.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UIElementInspector.entitlements; sourceTree = "<group>"; };
 		8C3763DFFC84207CBEE9D2A7 /* InspectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorViewModel.swift; sourceTree = "<group>"; };
 		8CE2F41B97CA92327F4F1D69 /* PermissionPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionPromptView.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				5841D37CA65EC507CC115091 /* ApplicationService.swift */,
 				0A2EFD92D78467C157DB6D1F /* HighlightOverlayService.swift */,
 				56527E0551434E823AE7D233 /* MousePickingService.swift */,
+				6327CF145FF5147FC4D74BCC /* RegionSelectionService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 				FA6050DCD412DA0FF77A42EF /* InspectorViewModel.swift in Sources */,
 				D27285839CBA251004399A6A /* MousePickingService.swift in Sources */,
 				9494A4E65341B0E9300E8422 /* PermissionPromptView.swift in Sources */,
+				5C44ECCB729C844028B22AA5 /* RegionSelectionService.swift in Sources */,
 				1EBC5A86EFD649EF08EC8E01 /* UIElementInspectorApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

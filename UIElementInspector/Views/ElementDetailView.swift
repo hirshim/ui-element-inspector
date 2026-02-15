@@ -31,55 +31,41 @@ struct ElementDetailView: View {
     return items;
   }
 
-  var body: some View {
-    VStack(alignment: .leading, spacing: 0) {
-      let informational = makeItems(for: .informational);
-      let visualState = makeItems(for: .visualState);
-      let valueItems = makeItems(for: .value);
-      let other = otherItems;
+  private var sections: [(title: String, items: [AccessibilityService.AttributeItem])] {
+    var result: [(title: String, items: [AccessibilityService.AttributeItem])] = [
+      (AttributeCategory.informational.rawValue, makeItems(for: .informational)),
+      (AttributeCategory.visualState.rawValue, makeItems(for: .visualState)),
+      (AttributeCategory.value.rawValue, makeItems(for: .value)),
+    ].filter { !$0.items.isEmpty };
+    let other = otherItems;
+    if !other.isEmpty {
+      result.append(("\(AttributeCategory.other.rawValue) (\(other.count))", other));
+    }
+    return result;
+  }
 
-      if !informational.isEmpty {
-        attributeSection(
-          title: AttributeCategory.informational.rawValue,
-          items: informational
-        );
-      }
-      if !visualState.isEmpty {
-        attributeSection(
-          title: AttributeCategory.visualState.rawValue,
-          items: visualState
-        );
-      }
-      if !valueItems.isEmpty {
-        attributeSection(
-          title: AttributeCategory.value.rawValue,
-          items: valueItems
-        );
-      }
-      if !other.isEmpty {
-        attributeSection(
-          title: "\(AttributeCategory.other.rawValue) (\(other.count))",
-          items: other
-        );
+  var body: some View {
+    let secs = sections;
+    Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 12, verticalSpacing: 4) {
+      ForEach(secs.indices, id: \.self) { index in
+        if index > 0 {
+          Divider().padding(.vertical, 4);
+        }
+        Text(secs[index].title)
+          .font(.headline)
+          .padding(.bottom, 2);
+        ForEach(secs[index].items) { item in
+          GridRow {
+            Text(item.key)
+              .foregroundStyle(.secondary);
+            Text(item.value)
+              .frame(maxWidth: .infinity, alignment: .leading);
+          }
+        }
       }
     }
     .padding()
     .textSelection(.enabled)
     .navigationTitle(element.displayLabel);
-  }
-
-  @ViewBuilder
-  private func attributeSection(
-    title: String,
-    items: [AccessibilityService.AttributeItem]
-  ) -> some View {
-    GroupBox(title) {
-      Table(items) {
-        TableColumn("属性名", value: \.key)
-          .width(min: 100, ideal: 200);
-        TableColumn("値", value: \.value);
-      }
-      .frame(height: CGFloat(items.count + 1) * 26);
-    }
   }
 }

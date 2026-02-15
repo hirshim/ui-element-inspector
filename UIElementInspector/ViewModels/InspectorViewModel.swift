@@ -22,12 +22,14 @@ final class InspectorViewModel {
   }
 
   var isPickMode: Bool = false;
+  var isRegionSelectMode: Bool = false;
 
   private var cachedFlatElements: [AccessibilityElement] = [];
   private let accessibilityService = AccessibilityService();
   private let applicationService = ApplicationService();
   private let highlightService = HighlightOverlayService();
   private let mousePickingService = MousePickingService();
+  private let regionSelectionService = RegionSelectionService();
 
   let maxDepthLimit: Int = 50;
   var totalElementCount: Int { cachedFlatElements.count; }
@@ -101,6 +103,7 @@ final class InspectorViewModel {
 
   func startPickMode() {
     guard let app = selectedApp, !isPickMode else { return; }
+    stopRegionSelection();
     isPickMode = true;
 
     mousePickingService.onHover = { [weak self] axElement, position, size in
@@ -136,6 +139,38 @@ final class InspectorViewModel {
     mousePickingService.stop();
     highlightService.hide();
   }
+
+  // MARK: - Region Selection
+
+  func startRegionSelection() {
+    guard selectedApp != nil, !isRegionSelectMode else { return; }
+    stopPickMode();
+    isRegionSelectMode = true;
+
+    regionSelectionService.onRegionSelected = { [weak self] region in
+      guard let self else { return; }
+      self.filter.regionFilter = region;
+      self.isRegionSelectMode = false;
+    };
+
+    regionSelectionService.onCancel = { [weak self] in
+      self?.isRegionSelectMode = false;
+    };
+
+    regionSelectionService.start();
+  }
+
+  func stopRegionSelection() {
+    guard isRegionSelectMode else { return; }
+    isRegionSelectMode = false;
+    regionSelectionService.stop();
+  }
+
+  func clearRegionFilter() {
+    filter.regionFilter = nil;
+  }
+
+  // MARK: - Helpers
 
   private func findElementInTree(axElement: AXUIElement) -> AccessibilityElement? {
     cachedFlatElements.first { CFEqual($0.axElement, axElement) };
