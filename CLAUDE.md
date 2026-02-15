@@ -90,6 +90,6 @@ Resources/    → Info.plist, entitlements, Assets.xcassets
 
 `project.yml`を編集後は`xcodegen generate`で`.xcodeproj`を再生成する。pbxprojの直接編集は避ける。
 
-- バンドルID: `com.example.UIElementInspector`
+- バンドルID: `com.hirshim.UIElementInspector`
 - 開発チーム: `7YNKVG32P3`
 - コード署名: Automatic
