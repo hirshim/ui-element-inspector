@@ -21,7 +21,7 @@ struct PermissionPromptView: View {
         Text("手順:")
           .font(.headline);
         Text("1. 「権限を要求」をクリック");
-        Text("2. システム設定でUIElementInspector（またはXcode）を探す");
+        Text("2. システム設定でUI Element Inspector（またはXcode）を探す");
         Text("3. チェックボックスをオンにする");
         Text("4. このアプリに戻って「再確認」をクリック");
         Text("5. それでも表示されない場合はアプリを再起動");
