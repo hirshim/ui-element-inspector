@@ -191,10 +191,12 @@ final class InspectorViewModel {
       forName: NSWorkspace.didTerminateApplicationNotification,
       object: nil, queue: .main
     ) { [weak self] notification in
-      guard let self,
-            let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
-            app.processIdentifier == pid else { return; }
-      self.handleAppTerminated();
+      MainActor.assumeIsolated {
+        guard let self,
+              let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
+              app.processIdentifier == pid else { return; }
+        self.handleAppTerminated();
+      };
     };
   }
 
