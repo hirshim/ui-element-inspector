@@ -54,7 +54,7 @@ struct ElementTreeView: View {
     if node == target { return Set(); }
     for child in node.children {
       if let ancestors = findAncestorIDs(of: target, in: child) {
-        return ancestors.union([node.stableID]);
+        return ancestors.union([node.id]);
       }
     }
     return nil;
@@ -110,12 +110,12 @@ private struct TreeNodeContent: View {
     } else {
       DisclosureGroup(
         isExpanded: Binding(
-          get: { expandedItems.contains(element.stableID) },
+          get: { expandedItems.contains(element.id) },
           set: { isExpanded in
             if isExpanded {
-              expandedItems.insert(element.stableID);
+              expandedItems.insert(element.id);
             } else {
-              expandedItems.remove(element.stableID);
+              expandedItems.remove(element.id);
             }
           }
         )

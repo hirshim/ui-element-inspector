@@ -1,6 +1,9 @@
 import AppKit
 
-final class ApplicationService {
+final class ApplicationService: Sendable {
+
+  // MARK: - Applications
+
   func runningApplications() -> [AppInfo] {
     NSWorkspace.shared.runningApplications
       .filter { $0.activationPolicy == .regular }

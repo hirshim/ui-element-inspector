@@ -33,14 +33,8 @@ struct AccessibilityElement: Identifiable, Hashable {
     "\(role)_\(indexPath.map(String.init).joined(separator: "_"))";
   }
 
-  var stableID: String { id; }
-
   var flattened: [AccessibilityElement] {
     [self] + children.flatMap { $0.flattened };
-  }
-
-  var optionalChildren: [AccessibilityElement]? {
-    children.isEmpty ? nil : children;
   }
 
   var displayLabel: String {
@@ -79,10 +73,10 @@ struct AccessibilityElement: Identifiable, Hashable {
   }
 
   static func == (lhs: Self, rhs: Self) -> Bool {
-    lhs.stableID == rhs.stableID;
+    lhs.id == rhs.id;
   }
 
   func hash(into hasher: inout Hasher) {
-    hasher.combine(stableID);
+    hasher.combine(id);
   }
 }
