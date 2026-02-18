@@ -9,7 +9,7 @@ final class AccessibilityService: Sendable {
     AXIsProcessTrusted();
   }
 
-  nonisolated(unsafe) static let trustedCheckKey = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String;
+  static let trustedCheckKey = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String;
 
   static func requestPermission() {
     let options = [trustedCheckKey: true] as CFDictionary;
